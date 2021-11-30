@@ -9,8 +9,11 @@ Text Domain: sbs_author_blog
 */
 global $sbs_current_lang;
 $sbs_current_lang = 'ar';
+include_once plugin_dir_path(__FILE__).'helper.php';
 include_once plugin_dir_path(__FILE__).'shortcode/shortcode.php';
 include_once plugin_dir_path(__FILE__).'sidebar/sidebar.php';
+include_once plugin_dir_path(__FILE__).'action/add_action.php';
+include_once plugin_dir_path(__FILE__).'action/method_action.php';
 register_activation_hook( __FILE__, 'sbs_myplugin_activate' );
 function sbs_myplugin_activate(){
   add_role(
@@ -188,7 +191,7 @@ function save_custom_meta_data($id) {
      $points = [];
      if(!empty($_POST['breaking_news_point'])){
        $breaking_news_point = $_POST['breaking_news_point'];
-       print_r($breaking_news_point);
+       //print_r($breaking_news_point);
 
        foreach($breaking_news_point['title'] as $key=>$b_point){
          $point = [];
@@ -226,5 +229,5 @@ function save_custom_meta_data($id) {
 function update_edit_form() {
 	echo ' enctype="multipart/form-data"';
 }
-add_action( 'post_edit_form_tag', 'update_edit_form' );
+add_action('post_edit_form_tag','update_edit_form' );
 ?>

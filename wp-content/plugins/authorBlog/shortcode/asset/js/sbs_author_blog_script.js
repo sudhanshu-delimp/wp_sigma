@@ -2,6 +2,11 @@ var removeSpinner = function(){
   jQuery(".fa-spinner").remove();
 }
 
+jQuery('.modal-toggle').on('click', function(e) {
+e.preventDefault();
+jQuery('.modal').toggleClass('is-visible');
+});
+
 jQuery(document).ready(function ($) {
     jQuery('.my-news-ticker').AcmeTicker({
         type:'marquee',

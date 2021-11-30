@@ -90,9 +90,10 @@ global $sbs_current_lang;
 		<?php
 	}
 	?>
-
+	<div class="ads-side">
+		<?php echo do_shortcode("[category_play_list category_id='{$category->cat_ID}' loader='0' limit='3']");?>
+	</div>
 <div class="ads-side">
-	
 	<?php echo do_shortcode("[promotion_sidebar_four]");?>
 </div>
 
