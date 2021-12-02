@@ -97,7 +97,7 @@ function getCategoryRestPostCount($category_id){
 	$rest_count_sql .=" LEFT JOIN wp_term_relationships rel ON rel.object_id = p.ID";
 	$rest_count_sql .=" LEFT JOIN wp_term_taxonomy tax ON tax.term_taxonomy_id = rel.term_taxonomy_id";
 	$rest_count_sql .=" LEFT JOIN wp_terms t ON t.term_id = tax.term_id";
-	$rest_count_sql .=" WHERE (pm.meta_key = 'csco_post_video_url' OR pm.meta_key != 'csco_post_video_url') AND pm.meta_value ='' AND p.post_status = 'publish' AND p.post_type = 'post' AND";
+	$rest_count_sql .=" WHERE p.post_status = 'publish' AND p.post_type = 'post' AND";
 	if(!empty($sbs_current_lang)){
 			$rest_count_sql .=" ( ( trs.language_code = '".$sbs_current_lang."' AND p.post_type = 'post' ) ) AND";
 	}
@@ -124,7 +124,7 @@ function load_rest_posts(){
 	$current_post_count = $_POST['current_post_count'];
 	$rowcount = getCategoryRestPostCount($category_id);
 
-	$cat_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,pm.meta_value as vidoe_url,t.name as category_name FROM wp_posts AS p";
+	$cat_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,t.name as category_name FROM wp_posts AS p";
 	if(!empty($sbs_current_lang)){
 			$cat_sql .=" JOIN wp_icl_translations trs ON p.ID = trs.element_id AND trs.element_type = CONCAT('post_', p.post_type)";
 	}
@@ -132,7 +132,7 @@ function load_rest_posts(){
 	$cat_sql .=" LEFT JOIN wp_term_relationships rel ON rel.object_id = p.ID";
 	$cat_sql .=" LEFT JOIN wp_term_taxonomy tax ON tax.term_taxonomy_id = rel.term_taxonomy_id";
 	$cat_sql .=" LEFT JOIN wp_terms t ON t.term_id = tax.term_id";
-	$cat_sql .=" WHERE (pm.meta_key = 'csco_post_video_url' or pm.meta_key != 'csco_post_video_url') AND  pm.meta_value ='' AND p.post_status = 'publish' AND p.post_type = 'post' AND";
+	$cat_sql .=" WHERE p.post_status = 'publish' AND p.post_type = 'post' AND";
 	if(!empty($sbs_current_lang)){
 			$cat_sql .=" ( ( trs.language_code = '".$sbs_current_lang."' AND p.post_type = 'post' ) ) AND";
 	}

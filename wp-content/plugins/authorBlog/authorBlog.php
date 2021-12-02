@@ -8,7 +8,7 @@
 Text Domain: sbs_author_blog
 */
 global $sbs_current_lang;
-$sbs_current_lang = 'ar';
+$sbs_current_lang = 'en';
 include_once plugin_dir_path(__FILE__).'helper.php';
 include_once plugin_dir_path(__FILE__).'shortcode/shortcode.php';
 include_once plugin_dir_path(__FILE__).'sidebar/sidebar.php';

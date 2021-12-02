@@ -2,10 +2,20 @@ var removeSpinner = function(){
   jQuery(".fa-spinner").remove();
 }
 
-jQuery('.modal-toggle').on('click', function(e) {
+jQuery('.sbs-youtube-playlist-card').on('click', function(e) {
 e.preventDefault();
+var playlist_item_url = jQuery(this).attr('href');
+jQuery(".sbs-playlist-modal iframe").attr('src',playlist_item_url);
 jQuery('.modal').toggleClass('is-visible');
 });
+
+jQuery('.sbs-playlist-modal modal-close').on('click', function(e) {
+  console.log("sbs-youtube-playlist-card modal-close");
+e.preventDefault();
+jQuery(".sbs-playlist-modal iframe").attr('src','#');
+jQuery('.modal').toggleClass('is-visible');
+});
+
 
 jQuery(document).ready(function ($) {
     jQuery('.my-news-ticker').AcmeTicker({

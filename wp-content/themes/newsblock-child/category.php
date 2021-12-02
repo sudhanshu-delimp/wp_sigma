@@ -18,29 +18,20 @@ global $sbs_current_lang;
 
 	<?php
 	$last_id = 0;
-	$cat_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,pm.meta_value as vidoe_url,t.name as category_name FROM wp_posts AS p";
+	$cat_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,t.name as category_name FROM wp_posts AS p";
 	if(!empty($sbs_current_lang)){
-			$cat_sql .=" JOIN wp_icl_translations trs ON p.ID = trs.element_id AND trs.element_type = CONCAT('post_', p.post_type)";
+		 $cat_sql .=" JOIN wp_icl_translations trs ON p.ID = trs.element_id AND trs.element_type = CONCAT('post_', p.post_type)";
 	}
 	$cat_sql .=" LEFT JOIN wp_postmeta AS pm ON(p.ID = pm.post_id)";
 	$cat_sql .=" LEFT JOIN wp_term_relationships rel ON rel.object_id = p.ID";
 	$cat_sql .=" LEFT JOIN wp_term_taxonomy tax ON tax.term_taxonomy_id = rel.term_taxonomy_id";
 	$cat_sql .=" LEFT JOIN wp_terms t ON t.term_id = tax.term_id";
-	$cat_sql .=" WHERE (pm.meta_key = 'csco_post_video_url' OR pm.meta_key != 'csco_post_video_url') AND pm.meta_value ='' AND p.post_status = 'publish' AND p.post_type = 'post' AND t.term_id={$category->cat_ID}";
+	$cat_sql .=" WHERE p.post_status = 'publish' AND p.post_type = 'post' AND t.term_id={$category->cat_ID}";
 	if(!empty($sbs_current_lang)){
 			$cat_sql .=" AND (( trs.language_code = '".$sbs_current_lang."' AND p.post_type = 'post' ))";
 	}
 	$cat_sql .=" GROUP BY pm.post_id ORDER BY p.ID DESC LIMIT 7";
 	$recent_posts = $wpdb->get_results($cat_sql);
-	// if(!empty($recent_posts)){
-	// 	foreach($recent_posts as $key=>$post){
-	// 		if($post->vidoe_url!=''){
-	// 			unset($recent_posts[$key]);
-	// 		}
-	// 	}
-	// }
-	//echo '<h5>First: '.$cat_sql.'</h5>';
-	//echo '<h1>'.$cat_sql.'</h1>';
 	?>
 	<?php
 	if(!empty($recent_posts)){
@@ -90,82 +81,17 @@ global $sbs_current_lang;
 		<?php
 	}
 	?>
-	<div class="ads-side">
-		<?php echo do_shortcode("[category_play_list category_id='{$category->cat_ID}' loader='0' limit='3']");?>
-	</div>
+<?php echo do_shortcode("[category_play_list category_id='{$category->cat_ID}' loader='0' limit='3']");?>
 <div class="ads-side">
 	<?php echo do_shortcode("[promotion_sidebar_four]");?>
 </div>
 
-	<div class="cat-video">
-	<?php
-	$video_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,pm.meta_value as vidoe_url,t.name as category_name FROM wp_posts AS p";
-  if(!empty($sbs_current_lang)){
-			$video_sql .=" JOIN wp_icl_translations trs ON p.ID = trs.element_id AND trs.element_type = CONCAT('post_', p.post_type)";
-	}
-	$video_sql .=" LEFT JOIN wp_postmeta AS pm ON(p.ID = pm.post_id)";
-	$video_sql .=" LEFT JOIN wp_term_relationships rel ON rel.object_id = p.ID";
-	$video_sql .=" LEFT JOIN wp_term_taxonomy tax ON tax.term_taxonomy_id = rel.term_taxonomy_id";
-	$video_sql .=" LEFT JOIN wp_terms t ON t.term_id = tax.term_id";
-	$video_sql .=" WHERE (pm.meta_key = 'csco_post_video_url') AND pm.meta_value !='' AND p.post_status = 'publish' AND p.post_type = 'post' AND t.term_id={$category->cat_ID}";
-	if(!empty($sbs_current_lang)){
-			$video_sql .=" AND (( trs.language_code = '".$sbs_current_lang."' AND p.post_type = 'post' ))";
-	}
-	$video_sql .=" GROUP BY pm.post_id ORDER BY p.ID DESC";
-	$video_posts = $wpdb->get_results($video_sql);
-	//echo '<h5>Video: '.$video_sql.'</h5>';
-	// if(!empty($video_posts)){
-	// 	foreach($video_posts as $key=>$post){
-	// 		if($post->vidoe_url==''){
-	// 			unset($video_posts[$key]);
-	// 		}
-	// 	}
-	// }
-	if(!empty($video_posts)){
-		?>
-       <div class="slide-code">
-       	<?php echo do_shortcode('[rpsw_recent_slider limit="5" show_date="false" show_category_name="false" show_content="false" bullet="false" arrows="true" autoplay="true" autoplay="8000" speed="2000" show_author="false" show_read_more="false"]'); ?>
-       </div>
-
-		<div class="video-inner">
-		<h1 class="sub-head video-head"><?php echo __('Latest Video','sbs_author_blog'); ?></h1>
-		<div class="carousel-2">
-		<?php
-		foreach($video_posts as $key=>$post){
-		$post_image = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
-		$post_content = wp_strip_all_tags($post->post_content);
-		if($post->vidoe_url!=''){
-			?>
-			<div class="col-sm-3">
-			<div class="card" style="width: 100%;">
-			<a href="<?php echo get_permalink($post->ID);?>"><img class="card-img-top" src="<?php echo $post_image;?>" alt="Card image cap"></a>
-			<div class="card-body">
-			<div class="post-cat cs-meta-category">
-					<ul class="post-categories">
-						<li><a href="<?php echo get_category_link($category->cat_ID); ?>"><span><?php echo get_cat_name($category->cat_ID); ?></span></a></li>
-					</ul>
-			</div>
-			<div class="post-ctnt"><div><p><strong><a href="<?php echo $post->vidoe_url; ?>"><?php echo $post->vidoe_url; ?></a></strong></p>
-			<h2 class="card-title cs-entry__title"><a href="<?php echo get_permalink($post->ID);?>"><?php echo $post->post_title; ?></a></h2></div>
-			<h4 class="card-title date cs-entry__post-meta"><?php echo date('m/d/Y',strtotime($post->post_date)); ?></h4></div>
-			</div>
-			</div>
-			</div>
-			<?php
-		}
-		}
-		?>
-		</div>
-	    </div>
-		<?php
-	}
-	?>
-   </div>
+	<!-- /*video section code*/ -- >
 
 	<?php
 	$rowcount = getCategoryRestPostCount($category->cat_ID);
 	$limit = 20;
-	$cat_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,pm.meta_value as vidoe_url,t.name as category_name FROM wp_posts AS p";
+	$cat_sql = "SELECT p.ID,p.post_date,p.post_title,p.post_content,t.name as category_name FROM wp_posts AS p";
 	if(!empty($sbs_current_lang)){
 			$cat_sql .=" JOIN wp_icl_translations trs ON p.ID = trs.element_id AND trs.element_type = CONCAT('post_', p.post_type)";
 	}
@@ -173,21 +99,13 @@ global $sbs_current_lang;
 	$cat_sql .=" LEFT JOIN wp_term_relationships rel ON rel.object_id = p.ID";
 	$cat_sql .=" LEFT JOIN wp_term_taxonomy tax ON tax.term_taxonomy_id = rel.term_taxonomy_id";
 	$cat_sql .=" LEFT JOIN wp_terms t ON t.term_id = tax.term_id";
-	$cat_sql .=" WHERE (pm.meta_key = 'csco_post_video_url' OR pm.meta_key != 'csco_post_video_url') AND pm.meta_value ='' AND p.post_status = 'publish' AND p.post_type = 'post' AND";
+	$cat_sql .=" WHERE p.post_status = 'publish' AND p.post_type = 'post' AND";
 	if(!empty($sbs_current_lang)){
 			$cat_sql .=" ( ( trs.language_code = '".$sbs_current_lang."' AND p.post_type = 'post' ) ) AND";
 	}
 	$cat_sql .=" t.term_id={$category->cat_ID} AND p.ID<{$last_id}";
 	$cat_sql .=" GROUP BY pm.post_id  ORDER BY p.ID DESC LIMIT {$limit}";
 	$recent_posts = $wpdb->get_results($cat_sql);
-	//echo '<h5>Second : '.$cat_sql.'</h5>';
-	// if(!empty($recent_posts)){
-	// 	foreach($recent_posts as $key=>$post){
-	// 		if($post->vidoe_url!=''){
-	// 			unset($recent_posts[$key]);
-	// 		}
-	// 	}
-	// }
 	if(!empty($recent_posts)){
 		?>
 		 <div class="cnvs-block-row cnvs-block-row-1632815721397 cnvs-block-row-columns-1 head-bod">
@@ -259,7 +177,7 @@ global $sbs_current_lang;
 
 if ( is_active_sidebar( 'sidebar-main' ) ) : ?>
 <div id="header-widget-area" class="chw-widget-area widget-area" role="complementary">
-<?php dynamic_sidebar( 'sidebar-main' ); ?>
+<?php //dynamic_sidebar( 'sidebar-main' ); ?>
 </div>
 <?php endif; ?>
 
